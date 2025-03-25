@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solutions Challenge Prototype</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: url('https://storage.googleapis.com/gweb-uniblog-publish-prod/original_images/New__revised_0312_Keyword_blog-header-animated-final_YCPcPYO.gif') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+        }
+        .chat-container {
+            width: 400px;
+            max-width: 100%;
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 80vh;
+            border: #666;
+            border-width:0cap;
+        }
+        .chat-header {
+            background: #fff;
+            padding: 15px;
+            text-align: center;
+            font-size: 32px;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            border: black;
+            box-shadow: 0px 2px 50px rgba(0, 0, 0, 0.2);
+        }
+        .google-title, .zoggy-title {
+            font-size: 36px; /* Increased size */
+            font-weight: bold;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3); /* Added depth */
+        }
+
+        /* Google Colors */
+        .google-title span:nth-child(1) { color: #4285F4; text-shadow: 3px 3px 6px rgba(66, 133, 244, 0.6); }
+        .google-title span:nth-child(2) { color: #EA4335; text-shadow: 3px 3px 6px rgba(234, 67, 53, 0.6); }
+        .google-title span:nth-child(3) { color: #FBBC05; text-shadow: 3px 3px 6px rgba(251, 188, 5, 0.6); }
+        .google-title span:nth-child(4) { color: #4285F4; text-shadow: 3px 3px 6px rgba(66, 133, 244, 0.6); }
+        .google-title span:nth-child(5) { color: #34A853; text-shadow: 3px 3px 6px rgba(52, 168, 83, 0.6); }
+        .google-title span:nth-child(6) { color: #EA4335; text-shadow: 3px 3px 6px rgba(234, 67, 53, 0.6); }
+
+        /* Zoggy Colors */
+        .zoggy-title span:nth-child(1), 
+        .zoggy-title span:nth-child(2) { 
+            color: #EA4335; 
+            text-shadow: 3px 3px 6px rgba(234, 67, 53, 0.6); 
+        }
+        .zoggy-title span:nth-child(3),
+        .zoggy-title span:nth-child(4),
+        .zoggy-title span:nth-child(5) { 
+            color: #FB7405; 
+            text-shadow: 3px 3px 6px rgba(251, 116, 5, 0.6); 
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+            font-style: italic;
+        }
+        .chat-body {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: 50px 2px 50px rgba(0, 0, 0, 0.2);
+            box-shadow: 50px 2px 0px rgba(0, 0, 0, 0.2);
+        }
+        .chat-footer {
+            display: flex;
+            padding: 10px;
+            background: #fff;
+            border-top: 1px solid #ddd;
+            position: sticky;
+            bottom: 0;
+            z-index: 10;
+        }
+        input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            outline: none;
+            font-size: 16px;
+        }
+        button {
+            background: #ff0000;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .message {
+            display: flex;
+            margin-bottom: 10px;
+            align-items: center;
+            opacity: 0;
+            animation: fadeIn 0.5s ease-in-out forwards;
+        }
+        .message.user {
+            justify-content: flex-end;
+        }
+        .message.bot {
+            justify-content: flex-start;
+        }
+        .message-content {
+            padding: 10px 15px;
+            border-radius: 15px;
+            max-width: 70%;
+            font-size: 14px;
+        }
+        .user .message-content {
+            background: #0078ff;
+            color: white;
+        }
+        .bot .message-content {
+            background: #e5e5e5;
+            color: black;
+        }
+        .typing-indicator {
+            display: none;
+            text-align: left;
+            margin-top: 10px;
+        }
+        .typing-indicator img {
+            width: 60px;
+            height: auto;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <div class="google-title">
+                <span>G</span><span>O</span><span>O</span><span>G</span><span>L</span><span>E</span>
+            </div>
+            <div class="zoggy-title">
+                <span>Z</span><span>O</span><span>G</span><span>G</span><span>Y</span>
+            </div>
+            <div class="subtitle">zhoo chahogii vohh ayeggyy!!</div>
+        </div>
+        <div class="chat-body" id="chat-body">
+            <div class="message bot">
+                <div class="message-content">👋 Hey there!</div>
+            </div>
+            <div class="typing-indicator" id="typing-indicator">
+                <img src="https://media3.giphy.com/media/cmCHuk53AiTmOwBXlw/giphy.gif" alt="Scooty typing...">
+            </div>
+        </div>
+        <div class="chat-footer">
+            <input type="text" id="user-input" placeholder="Type your message..." onkeypress="handleKeyPress(event)">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        let userId = localStorage.getItem("user_id");
+        if (!userId) {
+            userId = null; // Let the server generate it on first message
+        }
+
+        function appendMessage(content, sender) {
+            const chatBody = document.getElementById("chat-body");
+            const messageDiv = document.createElement("div");
+            messageDiv.classList.add("message", sender);
+            const messageContent = document.createElement("div");
+            messageContent.classList.add("message-content");
+            messageContent.textContent = content;
+            messageDiv.appendChild(messageContent);
+            chatBody.appendChild(messageDiv);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        function showTypingIndicator(show) {
+            const chatBody = document.getElementById("chat-body");
+            let typingIndicator = document.getElementById("typing-indicator");
+
+            if (show) {
+                typingIndicator.style.display = "block";
+                chatBody.appendChild(typingIndicator); // Ensures it's at the right place
+                chatBody.scrollTop = chatBody.scrollHeight;
+            } else {
+                typingIndicator.style.display = "none";
+            }
+        }
+
+        function sendMessage() {
+            const userInput = document.getElementById("user-input");
+            const message = userInput.value.trim();
+            if (message === "") return;
+
+            appendMessage(message, "user");
+            userInput.value = "";
+
+            showTypingIndicator(true);
+
+            setTimeout(() => {
+                fetch("/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ user_id: userId, message: message })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    showTypingIndicator(false);
+                    appendMessage(data.response, "bot");
+                    userId = data.user_id; // Update userId from server response
+                    localStorage.setItem("user_id", userId); // Store it for next messages
+                })
+                .catch(error => {
+                    showTypingIndicator(false);
+                    appendMessage("Sorry, something went wrong.", "bot");
+                    console.error('Error:', error);
+                });
+            }, 2000);
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === "Enter") {
+                sendMessage();
+            }
+        }
+    </script>
+</body>
+</html>

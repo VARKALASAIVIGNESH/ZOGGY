@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+       body {
+            font-family: 'Arial', sans-serif;
+            background: white;
+            margin: 0;
+            padding: 20px 0; /* Add padding to avoid content touching edges */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh; /* Allow body to grow beyond viewport */
+            position: relative;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 40px;
+            font-weight: bold;
+            color: darkblue;
+            text-shadow: 3px 3px 8px rgba(156, 4, 4, 0.8);
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 10;
+            background: -webkit-linear-gradient(#5f0101, #f80000);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Table Container */
+        .table-container {
+            width: 90%;
+            max-width: 1200px;
+            background: white;
+            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.7);
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+            max-height: 70vh; /* Limit height to 70% of viewport, adjust as needed */
+            overflow-y: auto; /* Enable vertical scrolling */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        th {
+            background: #000000;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 14px;
+            text-align: left;
+            font-size: 16px;
+            position: sticky; /* Keep header fixed while scrolling */
+            top: 0;
+            z-index: 11; /* Ensure header stays above table body */
+        }
+
+        td {
+            padding: 14px;
+            text-align: left;
+            font-size: 16px;
+            color: #000;
+            background: white;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            word-wrap: break-word;
+        }
+
+        .update-status {
+            min-width: 180px;
+        }
+
+        tr:hover {
+            background: rgba(0, 0, 0, 0.05);
+            transition: background 0.3s ease-in-out;
+        }
+
+        select, button {
+            padding: 10px 14px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            width: 100%;
+        }
+
+        select {
+            background: #000000;
+            color: #fff;
+            outline: none;
+            border: 1px solid #777;
+        }
+
+        button {
+            background: #f24141;
+            color: white;
+            transition: background 0.3s ease-in-out;
+            margin-top: 5px;
+        }
+
+        button:hover {
+            background: #ff3b3b;
+        }
+
+        /* GIF Positioned at Bottom */
+        .background-gif {
+            position: fixed;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 1000px;
+            height: auto;
+            max-height: 300px;
+            object-fit: cover;
+            z-index: 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>ADMIN PORTAL</h1>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Address</th>
+                    <th>Category</th>
+                    <th>Order</th>
+                    <th>Payment</th>
+                    <th>Expected Delivery</th>
+                    <th>Status</th>
+                    <th class="update-status">Update Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order_id, order in orders.items() %}
+                    <tr>
+                        <td>{{ order_id }}</td>
+                        <td>{{ order.name }}</td>
+                        <td>{{ order.phone }}</td>
+                        <td>{{ order.address }}</td>
+                        <td>{{ order.category }}</td>
+                        <td>{{ order.order }}</td>
+                        <td>{{ order.payment }}</td>
+                        <td>{{ order.expected_delivery_time }}</td>
+                        <td>{{ order.status }}</td>
+                        <td class="update-status">
+                            <form action="/update_order_status/{{ order_id }}" method="POST">
+                                <select name="status">
+                                    {% if order.category == 'food' %}
+                                        <option value="Pending" {% if order.status == 'Pending' %}selected{% endif %}>Pending</option>
+                                        <option value="Order is being cooked" {% if order.status == 'Order is being cooked' %}selected{% endif %}>Order is being cooked</option>
+                                        <option value="Order assigned to delivery person" {% if order.status == 'Order assigned to delivery person' %}selected{% endif %}>Order assigned to delivery person</option>
+                                        <option value="Delivered" {% if order.status == 'Delivered' %}selected{% endif %}>Delivered</option>
+                                    {% elif order.category == 'groceries' %}
+                                        <option value="Pending" {% if order.status == 'Pending' %}selected{% endif %}>Pending</option>
+                                        <option value="Order is being processed" {% if order.status == 'Order is being processed' %}selected{% endif %}>Order is being processed</option>
+                                        <option value="Order is packed, waiting for delivery partner" {% if order.status == 'Order is packed, waiting for delivery partner' %}selected{% endif %}>Order is packed, waiting for delivery partner</option>
+                                        <option value="Order assigned to delivery partner" {% if order.status == 'Order assigned to delivery partner' %}selected{% endif %}>Order assigned to delivery partner</option>
+                                        <option value="Delivered" {% if order.status == 'Delivered' %}selected{% endif %}>Delivered</option>
+                                    {% elif order.category == 'medicine' %}
+                                        <option value="Pending" {% if order.status == 'Pending' %}selected{% endif %}>Pending</option>
+                                        <option value="Order is being processed" {% if order.status == 'Order is being processed' %}selected{% endif %}>Order is being processed</option>
+                                        <option value="Order packed, waiting for delivery partner" {% if order.status == 'Order packed, waiting for delivery partner' %}selected{% endif %}>Order packed, waiting for delivery partner</option>
+                                        <option value="Order assigned to delivery partner" {% if order.status == 'Order assigned to delivery partner' %}selected{% endif %}>Order assigned to delivery partner</option>
+                                        <option value="Delivered" {% if order.status == 'Delivered' %}selected{% endif %}>Delivered</option>
+                                    {% else %}
+                                        <option value="Pending" {% if order.status == 'Pending' %}selected{% endif %}>Pending</option>
+                                        <option value="Processing" {% if order.status == 'Processing' %}selected{% endif %}>Processing</option>
+                                        <option value="Delivered" {% if order.status == 'Delivered' %}selected{% endif %}>Delivered</option>
+                                    {% endif %}
+                                </select>
+                                <button type="submit">Update</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <img src="https://img.etimg.com/photo/msid-75153126/googles-doodle-thanking-all-packaging-shipping-and-delivery-workers-.jpg" class="background-gif">
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Status</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        .order-container {
+            width: 50%;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .order-item {
+            margin: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            background: #d1e7dd;
+        }
+        .tracking-link {
+            display: block;
+            margin-top: 10px;
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+    <div class="order-container">
+        <h2>Your Orders</h2>
+        <ul id="order-list"></ul>
+    </div>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch("/order-status")
+                .then(response => response.json())
+                .then(orders => {
+                    let orderList = document.getElementById("order-list");
+                    orders.forEach(order => {
+                        let orderItem = document.createElement("li");
+                        orderItem.className = "order-item";
+                        orderItem.innerHTML = `
+                            ${order.item} - ${order.status} <br>
+                            <a class="tracking-link" href="${order.tracking_link}" target="_blank">Track Order</a>
+                        `;
+                        orderList.appendChild(orderItem);
+                    });
+                });
+        });
+    </script>
+</body>
+</html>
